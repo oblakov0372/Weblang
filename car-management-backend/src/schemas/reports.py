@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import BaseModel
 
 
@@ -14,6 +16,6 @@ class MonthlyRequestsReportScheme(BaseModel):
 
 
 class GarageDailyAvailabilityReportScheme(BaseModel):
-    date: str
+    date: date
     requests: int
     availableCapacity: int

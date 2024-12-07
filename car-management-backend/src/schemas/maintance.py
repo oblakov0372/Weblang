@@ -1,12 +1,14 @@
+from datetime import date
+
 from pydantic import BaseModel
 
 
-class MaintanceSchema(BaseModel):
+class MaintenanceSchema(BaseModel):
     id: int
     carId: int
     carName: str
     serviceType: str
-    scheduleDate: str
+    scheduleDate: date
     garageId: int
     garageName: str
 
@@ -14,15 +16,15 @@ class MaintanceSchema(BaseModel):
         from_attributes = True
 
 
-class MaintanceSchemaAdd(BaseModel):
+class MaintenanceSchemaAdd(BaseModel):
     garageId: int
     carId: int
     serviceType: str
-    scheduleDate: str
+    scheduleDate: date
 
 
-class MaintanceSchemaEdit(BaseModel):
+class MaintenanceSchemaEdit(BaseModel):
     carId: int | None
-    garageId: int | None
-    scheduleDate: str | None
+    garageId: int  # Обязательное поле
+    scheduleDate: date | None
     serviceType: str | None

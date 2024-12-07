@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List
 
 from pydantic import BaseModel
 
@@ -9,7 +9,7 @@ class CarSchema(BaseModel):
     id: int | None
     make: str | None
     model: str | None
-    productionYear: str | None
+    productionYear: int | None
     licensePlate: str | None
     garages: list[GarageSchema] | None
 
@@ -20,7 +20,7 @@ class CarSchema(BaseModel):
 class CarSchemaAdd(BaseModel):
     make: str | None
     model: str | None
-    productionYear: str | None
+    productionYear: int | None
     licensePlate: str | None
     garageIds: list[int] | None
 
@@ -28,6 +28,6 @@ class CarSchemaAdd(BaseModel):
 class CarSchemaEdit(BaseModel):
     make: str | None
     model: str | None
-    productionYear: str | None
+    productionYear: int | None
     licensePlate: str | None
     garageIds: list[int] | None
