@@ -1,20 +1,23 @@
 from schemas.car import CarSchemaAdd
-from schemas.garage import GarageSchemaAdd, GarageSchemaEdit
+from schemas.garage import GarageSchema, GarageSchemaAdd, GarageSchemaEdit
 from utils.unitofwork import IUnitOfWork
 
 
 class GarageService:
-    async def get_garages(self, uow: IUnitOfWork, filters: dict):
+    async def get_garages(self, uow: IUnitOfWork, filters: dict) -> list[GarageSchema]:
         async with uow:
             garages = await uow.garages.find_all(filters)
             return garages
 
-    async def add_garage(self, uow: IUnitOfWork, garage: GarageSchemaAdd):
+    async def add_garage(
+        self, uow: IUnitOfWork, garage: GarageSchemaAdd
+    ) -> GarageSchema:
         garage_dict = garage.model_dump()
         async with uow:
             garage_id = await uow.garages.add_one(garage_dict)
             await uow.commit()
-            return garage_id
+            garage = GarageSchema(id=garage_id, **garage_dict)
+            return garage
 
     async def delete_garage(self, uow: IUnitOfWork, garage_id: int) -> bool:
         async with uow:
@@ -24,9 +27,10 @@ class GarageService:
 
     async def update_garage(
         self, uow: IUnitOfWork, garage_id: int, garage: GarageSchemaEdit
-    ) -> bool:
-        garage_data = garage.model_dump()
+    ) -> GarageSchema:
+        garage_dict = garage.model_dump()
         async with uow:
-            result = await uow.garages.edit_one(garage_id, garage_data)
+            garage_id = await uow.garages.edit_one(garage_id, garage_dict)
             await uow.commit()
-            return result
+            garage = GarageSchema(id=garage_id, **garage_dict)
+            return garage

@@ -27,9 +27,9 @@ async def get_garages(
 async def add_garage(
     garage: GarageSchemaAdd,
     uow: UOWDep,
-):
-    garage_id = await GarageService().add_garage(uow, garage)
-    return {"car_id": garage_id}
+) -> GarageSchema:
+    garage = await GarageService().add_garage(uow, garage)
+    return garage
 
 
 @router.delete("/{id}")
@@ -48,8 +48,6 @@ async def update_garage(
     uow: UOWDep,
     garage_id: int,
     garage: GarageSchemaEdit,
-):
-    success = await GarageService().update_garage(uow, garage_id, garage)
-    if not success:
-        raise HTTPException(status_code=404, detail="Garage not found")
-    return {"success": True}
+) -> GarageSchema:
+    garage = await GarageService().update_garage(uow, garage_id, garage)
+    return garage
