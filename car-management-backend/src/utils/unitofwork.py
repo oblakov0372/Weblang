@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Type
 
+from sqlalchemy import text
+
 from db.db import async_session_maker
 from repositories.car import CarRepository
 from repositories.garage import GarageRepository
@@ -34,10 +36,10 @@ class UnitOfWork:
 
     async def __aenter__(self):
         self.session = self.session_factory()
-
         self.cars = CarRepository(self.session)
         self.garages = GarageRepository(self.session)
-        self.maintenances = MaintenanceRepository(self.session)
+        self.maintenance = MaintenanceRepository(self.session)
+
         return self
 
     async def __aexit__(self, *args):

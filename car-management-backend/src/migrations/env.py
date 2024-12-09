@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from alembic import context
@@ -6,13 +7,11 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from db.db import Base
-from models.car import Car
-from models.garage import Garage
-from models.maintance import Maintenance
+from db.db import DATABASE_URL, Base
+from models import Car, Garage, Maintenance
 
 config = context.config
-config.set_main_option("sqlalchemy.url", "sqlite+aiosqlite:///sqlite.db")
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

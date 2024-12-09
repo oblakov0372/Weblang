@@ -2,6 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 
 from db.db import Base
+from schemas.car import CarSchema
 
 car_garages = Table(
     "car_garages",
@@ -22,3 +23,13 @@ class Car(Base):
 
     garages = relationship("Garage", secondary=car_garages, back_populates="cars")
     maintenances = relationship("Maintenance", back_populates="car")
+
+    def to_read_model(self) -> CarSchema:
+        return CarSchema(
+            id=self.id,
+            make=self.make,
+            model=self.model,
+            production_year=self.production_year,
+            license_plate=self.license_plate,
+            garages=[],
+        )

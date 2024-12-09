@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class GarageSchema(BaseModel):
@@ -15,7 +15,7 @@ class GarageSchema(BaseModel):
 class GarageSchemaAdd(BaseModel):
     name: str
     location: str
-    city: str
+    city: str = Field(alias="City")
     capacity: int
 
 

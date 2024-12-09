@@ -1,4 +1,4 @@
-from models.maintance import Maintenance
+from models import Maintenance
 from repositories.repository import SQLAlchemyRepository
 
 
