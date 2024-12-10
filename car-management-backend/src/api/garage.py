@@ -23,6 +23,15 @@ async def get_garages(
     return garages
 
 
+@router.get("/{id}")
+async def get_garage(
+    uow: UOWDep,
+    id: int,
+) -> GarageSchema:
+    garages = await GarageService().get_garage(uow, id)
+    return garages
+
+
 @router.post("")
 async def add_garage(
     garage: GarageSchemaAdd,

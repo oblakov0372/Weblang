@@ -9,6 +9,11 @@ class GarageService:
             garages = await uow.garages.find_all(filters)
             return garages
 
+    async def get_garage(self, uow: IUnitOfWork, id: int) -> GarageSchema:
+        async with uow:
+            garage = await uow.garages.find_by_id(id)
+            return garage
+
     async def add_garage(
         self, uow: IUnitOfWork, garage: GarageSchemaAdd
     ) -> GarageSchema:
