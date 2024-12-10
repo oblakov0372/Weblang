@@ -17,6 +17,11 @@ class AbstractRepository(ABC):
     async def find_one(self, **filter_by):
         raise NotImplementedError
 
+    abstractmethod
+
+    async def find_by_id(self, id: int):
+        raise NotImplementedError
+
     @abstractmethod
     async def edit_one(self, id: int, data: dict) -> int:
         raise NotImplementedError
@@ -63,6 +68,14 @@ class SQLAlchemyRepository(AbstractRepository):
 
     async def find_one(self, **filter_by):
         stmt = select(self.model).filter_by(**filter_by)
+        res = await self.session.execute(stmt)
+        record = res.scalar_one_or_none()
+        if not record:
+            return None
+        return record.to_read_model()
+
+    async def find_by_id(self, id: int):
+        stmt = select(self.model).where(self.model.id == id)
         res = await self.session.execute(stmt)
         record = res.scalar_one_or_none()
         if not record:

@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from db.db import Base
 from schemas.car import CarSchema
+from schemas.garage import GarageSchema
 
 car_garages = Table(
     "car_garages",
@@ -31,5 +32,5 @@ class Car(Base):
             model=self.model,
             production_year=self.production_year,
             license_plate=self.license_plate,
-            garages=[],
+            garages=[garage.to_read_model() for garage in self.garages],
         )
