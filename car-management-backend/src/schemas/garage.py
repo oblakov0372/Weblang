@@ -15,7 +15,7 @@ class GarageSchema(BaseModel):
 class GarageSchemaAdd(BaseModel):
     name: str
     location: str
-    city: str = Field(alias="City")
+    city: str = Field(alias="city")
     capacity: int
 
 

@@ -12,7 +12,7 @@ from repositories.maintenance import MaintenanceRepository
 class IUnitOfWork(ABC):
     cars: Type[CarRepository]
     garages: Type[GarageRepository]
-    maintances: Type[MaintenanceRepository]
+    maintenances: Type[MaintenanceRepository]
 
     @abstractmethod
     def __init__(self): ...
@@ -38,7 +38,7 @@ class UnitOfWork:
         self.session = self.session_factory()
         self.cars = CarRepository(self.session)
         self.garages = GarageRepository(self.session)
-        self.maintenance = MaintenanceRepository(self.session)
+        self.maintenances = MaintenanceRepository(self.session)
 
         return self
 

@@ -22,7 +22,7 @@ class MonthlyRequestsReportSchema(BaseModel):
 
 
 class GarageDailyAvailabilityReportSchema(BaseModel):
-    date: date
+    date: str
     requests: int
     available_capacity: int = Field(alias="availableCapacity")
 

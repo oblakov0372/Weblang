@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: f342dedaa2ee
+Revision ID: 9bf3fae42150
 Revises: 
-Create Date: 2024-12-09 01:05:50.869972
+Create Date: 2024-12-22 19:19:56.101625
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'f342dedaa2ee'
+revision: str = '9bf3fae42150'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -42,8 +42,8 @@ def upgrade() -> None:
     op.create_table('car_garages',
     sa.Column('car_id', sa.Integer(), nullable=False),
     sa.Column('garage_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['car_id'], ['cars.id'], ),
-    sa.ForeignKeyConstraint(['garage_id'], ['garages.id'], ),
+    sa.ForeignKeyConstraint(['car_id'], ['cars.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['garage_id'], ['garages.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('car_id', 'garage_id')
     )
     op.create_table('maintenance',
@@ -52,8 +52,8 @@ def upgrade() -> None:
     sa.Column('scheduled_date', sa.Date(), nullable=False),
     sa.Column('car_id', sa.Integer(), nullable=False),
     sa.Column('garage_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['car_id'], ['cars.id'], ),
-    sa.ForeignKeyConstraint(['garage_id'], ['garages.id'], ),
+    sa.ForeignKeyConstraint(['car_id'], ['cars.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['garage_id'], ['garages.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_maintenance_id'), 'maintenance', ['id'], unique=False)

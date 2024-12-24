@@ -6,7 +6,7 @@ from api.routers import all_routers
 
 app = FastAPI(title="Project")
 
-origins = ["http://10.32.10.209:3000"]
+origins = ["http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,

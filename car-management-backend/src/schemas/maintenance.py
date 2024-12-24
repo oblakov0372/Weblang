@@ -8,7 +8,7 @@ class MaintenanceSchema(BaseModel):
     car_id: int = Field(alias="carId")
     car_name: str = Field(alias="carName")
     service_type: str = Field(alias="serviceType")
-    schedule_date: date = Field(alias="scheduleDate")
+    scheduled_date: date = Field(alias="scheduledDate")
     garage_id: int = Field(alias="garageId")
     garage_name: str = Field(alias="garageName")
 
@@ -21,7 +21,7 @@ class MaintenanceSchemaAdd(BaseModel):
     garage_id: int = Field(alias="garageId")
     car_id: int = Field(alias="carId")
     service_type: str = Field(alias="serviceType")
-    schedule_date: date = Field(alias="scheduleDate")
+    scheduled_date: date = Field(alias="scheduledDate")
 
     class Config:
         populate_by_name = True
@@ -30,7 +30,7 @@ class MaintenanceSchemaAdd(BaseModel):
 class MaintenanceSchemaEdit(BaseModel):
     car_id: int | None = Field(alias="carId")
     garage_id: int = Field(alias="garageId")
-    schedule_date: date | None = Field(alias="scheduleDate")
+    scheduled_date: date | None = Field(alias="scheduledDate")
     service_type: str | None = Field(alias="serviceType")
 
     class Config:

@@ -8,8 +8,15 @@ from schemas.garage import GarageSchema
 car_garages = Table(
     "car_garages",
     Base.metadata,
-    Column("car_id", Integer, ForeignKey("cars.id"), primary_key=True),
-    Column("garage_id", Integer, ForeignKey("garages.id"), primary_key=True),
+    Column(
+        "car_id", Integer, ForeignKey("cars.id", ondelete="CASCADE"), primary_key=True
+    ),
+    Column(
+        "garage_id",
+        Integer,
+        ForeignKey("garages.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
 )
 
 
