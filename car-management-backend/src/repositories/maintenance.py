@@ -73,8 +73,8 @@ class MaintenanceRepository(SQLAlchemyRepository):
             )
             .where(
                 self.model.garage_id == garage_id,
-                self.model.scheduled_date >= start_month,
-                self.model.scheduled_date <= end_month,
+                func.strftime("%Y-%m", self.model.scheduled_date) >= start_month,
+                func.strftime("%Y-%m", self.model.scheduled_date) <= end_month,
             )
             .group_by("year_month")
         )

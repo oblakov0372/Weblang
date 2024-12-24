@@ -1,5 +1,8 @@
+from typing import List
+
 from schemas.car import CarSchemaAdd
 from schemas.garage import GarageSchema, GarageSchemaAdd, GarageSchemaEdit
+from schemas.reports import GarageDailyAvailabilityReportSchema
 from utils.unitofwork import IUnitOfWork
 
 
@@ -39,3 +42,12 @@ class GarageService:
             await uow.commit()
             garage = GarageSchema(id=garage_id, **garage_dict)
             return garage
+
+    async def get_garage_report(
+        self, uow: IUnitOfWork, garage_id: int, start_date: str, end_date: str
+    ) -> List[GarageDailyAvailabilityReportSchema]:
+        async with uow:
+            report = await uow.garages.get_garage_report(
+                garage_id, start_date, end_date
+            )
+            return report
