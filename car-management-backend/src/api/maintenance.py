@@ -6,6 +6,7 @@ from schemas.maintenance import (
     MaintenanceSchemaAdd,
     MaintenanceSchemaEdit,
 )
+from schemas.reports import MonthlyRequestsReportSchema
 from services.maintenance import MaintenanceService
 
 router = APIRouter(
@@ -55,3 +56,15 @@ async def delete_maintenance(id: int, uow: UOWDep):
     if not success:
         raise HTTPException(status_code=404, detail="Maintenance not found")
     return {"success": True}
+
+
+@router.get("/monthlyRequestsReport", response_model=list[MonthlyRequestsReportSchema])
+async def monthly_requests_report(
+    uow: UOWDep,
+    garage_id: int = Query(..., alias="garageId"),
+    start_month: str = Query(..., alias="startMonth"),
+    end_month: str = Query(..., alias="endMonth"),
+) -> list[MonthlyRequestsReportSchema]:
+    return await MaintenanceService().monthly_requests_report(
+        uow, garage_id, start_month, end_month
+    )

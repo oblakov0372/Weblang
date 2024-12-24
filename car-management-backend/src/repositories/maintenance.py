@@ -7,6 +7,7 @@ from models import Maintenance
 from models.garage import Garage
 from repositories.repository import SQLAlchemyRepository
 from schemas.maintenance import MaintenanceSchema
+from schemas.reports import MonthlyRequestsReportSchema, YearMonthSchema
 
 
 class MaintenanceRepository(SQLAlchemyRepository):
@@ -61,3 +62,35 @@ class MaintenanceRepository(SQLAlchemyRepository):
         capacity = garage_res.scalar()
 
         return current_count < capacity
+
+    async def get_monthly_requests_report(
+        self, garage_id: int, start_month: str, end_month: str
+    ) -> list[MonthlyRequestsReportSchema]:
+        stmt = (
+            select(
+                func.strftime("%Y-%m", self.model.scheduled_date).label("year_month"),
+                func.count(self.model.id).label("requests"),
+            )
+            .where(
+                self.model.garage_id == garage_id,
+                self.model.scheduled_date >= start_month,
+                self.model.scheduled_date <= end_month,
+            )
+            .group_by("year_month")
+        )
+
+        res = await self.session.execute(stmt)
+        results = res.all()
+
+        return [
+            MonthlyRequestsReportSchema(
+                yearMonth=YearMonthSchema(
+                    year=int(result.year_month.split("-")[0]),
+                    month=result.year_month.split("-")[1].upper(),
+                    leapYear=int(result.year_month.split("-")[0]) % 4 == 0,
+                    monthValue=int(result.year_month.split("-")[1]),
+                ),
+                requests=result.requests,
+            )
+            for result in results
+        ]

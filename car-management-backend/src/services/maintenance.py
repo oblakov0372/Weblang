@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from fastapi import HTTPException
 
 from schemas.maintenance import (
@@ -5,6 +7,7 @@ from schemas.maintenance import (
     MaintenanceSchemaAdd,
     MaintenanceSchemaEdit,
 )
+from schemas.reports import MonthlyRequestsReportSchema, YearMonthSchema
 from utils.unitofwork import IUnitOfWork
 
 
@@ -54,3 +57,43 @@ class MaintenanceService:
             success = await uow.maintenances.delete_one(maintenance_id)
             await uow.commit()
             return success
+
+    async def monthly_requests_report(
+        self, uow: IUnitOfWork, garage_id: int, start_month: str, end_month: str
+    ) -> list[MonthlyRequestsReportSchema]:
+        async with uow:
+            report_data = await uow.maintenances.get_monthly_requests_report(
+                garage_id, start_month, end_month
+            )
+
+            start_date = datetime.strptime(start_month, "%Y-%m")
+            end_date = datetime.strptime(end_month, "%Y-%m")
+
+            months = []
+            current_date = start_date
+            while current_date <= end_date:
+                months.append(current_date.strftime("%Y-%m"))
+                current_date += timedelta(days=32)
+                current_date = current_date.replace(day=1)
+
+            result_dict = {
+                f"{item.year_month.year}-{item.year_month.month_value:02d}": item.requests
+                for item in report_data
+            }
+
+            report = []
+            for month in months:
+                year, month_value = month.split("-")
+                report.append(
+                    MonthlyRequestsReportSchema(
+                        year_month=YearMonthSchema(
+                            year=int(year),
+                            month=month_value.upper(),
+                            leap_year=int(year) % 4 == 0,
+                            month_value=int(month_value),
+                        ),
+                        requests=result_dict.get(month, 0),
+                    )
+                )
+
+            return report
